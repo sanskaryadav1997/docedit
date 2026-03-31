@@ -72,16 +72,16 @@ router.get('/documents/:id', authMiddleware, async (req: AuthRequest, res: Respo
     },
   });
   if (!doc) return res.status(404).json({ error: 'Not found' });
-  const hasAccess = doc.ownerId === req.userId || doc.shares.some(s => s.userId === req.userId);
+  const hasAccess = doc.ownerId === req.userId || doc.shares.some((s: any) => s.userId === req.userId);
   if (!hasAccess) return res.status(403).json({ error: 'Access denied' });
-  const permission = doc.ownerId === req.userId ? 'owner' : doc.shares.find(s => s.userId === req.userId)?.permission || 'view';
+  const permission = doc.ownerId === req.userId ? 'owner' : doc.shares.find((s: any) => s.userId === req.userId)?.permission || 'view';
   res.json({ ...doc, permission });
 });
 
 router.put('/documents/:id', authMiddleware, async (req: AuthRequest, res: Response) => {
   const doc = await prisma.document.findUnique({ where: { id: req.params.id }, include: { shares: true } });
   if (!doc) return res.status(404).json({ error: 'Not found' });
-  const share = doc.shares.find(s => s.userId === req.userId);
+  const share = doc.shares.find((s: any) => s.userId === req.userId);
   const canEdit = doc.ownerId === req.userId || share?.permission === 'edit';
   if (!canEdit) return res.status(403).json({ error: 'No edit permission' });
   const { title, content } = req.body;
