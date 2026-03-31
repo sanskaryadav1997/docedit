@@ -1,0 +1,7 @@
+{
+  "name": "docedit",
+  "scripts": {
+    "build": "cd server && npm install && npx prisma generate && npx prisma db push && npx ts-node prisma/seed.ts && cd ../client && npm install && npm run build",
+    "start": "cd server && node dist/index.js"
+  }
+}
